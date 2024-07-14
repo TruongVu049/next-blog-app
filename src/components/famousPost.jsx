@@ -19,6 +19,7 @@ const FamousPost = async () => {
             <Link
               href={`/bai-viet/${item.slug}`}
               className="group w-full flex items-start gap-2"
+              key={item.id}
             >
               <Image
                 src={item.hinhanh}

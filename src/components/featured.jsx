@@ -15,6 +15,7 @@ const Featured = async () => {
             src={latestPost.hinhanh}
             alt="img"
             width={500}
+            priority={false}
             height={500}
             className="w-full h-auto"
           />

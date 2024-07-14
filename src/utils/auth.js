@@ -63,5 +63,5 @@ export const {
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
     }),
   ],
-  secret: "6s3BcDh3REKFItEl3ytbAU4AefBLxMr0PhaYcvPDYM36FVF5hmZffhbW9Z0cramt",
+  secret: process.env.NEXTAUTH_SECRET,
 });

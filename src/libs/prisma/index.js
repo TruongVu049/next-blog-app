@@ -111,7 +111,6 @@ export async function login(username) {
 
 export async function createPost(formData) {
   try {
-    console.log(formData);
     const post = await prisma.BaiViet.create({
       data: {
         tieude: formData.title,

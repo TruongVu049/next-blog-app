@@ -43,7 +43,7 @@ const FormWriteBlog = ({ category }) => {
   const imageHandler = useCallback(() => {
     "use client";
     if (typeof window !== "undefined") {
-      const input = document.createElement("input");
+      const input = document?.createElement("input");
       input.setAttribute("type", "file");
       input.setAttribute("accept", "image/*");
       input.click();
@@ -170,7 +170,6 @@ const FormWriteBlog = ({ category }) => {
             className="block mb-2 text-sm font-medium text-gray-900 "
           >
             Chọn danh mụ
-            <command />
           </label>
           <select
             name="category"

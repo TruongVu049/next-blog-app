@@ -21,7 +21,7 @@ const CartList = async ({ currentPage, totalPages, limit, search = "" }) => {
                     <Image
                       width={200}
                       height={200}
-                      href="image"
+                      alt="image"
                       src={item.hinhanh}
                       className="group-hover:scale-105 transform transition duration-y overflow-hidden h-auto w-full"
                     />

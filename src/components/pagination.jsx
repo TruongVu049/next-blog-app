@@ -3,8 +3,6 @@ import Link from "next/link";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { usePathname, useSearchParams } from "next/navigation";
 const Pagination = ({ totalPages, currentPage }) => {
-  console.log("render CartList");
-
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const hasPrev = 1 * (currentPage - 1) > 0;

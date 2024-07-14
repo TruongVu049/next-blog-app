@@ -21,7 +21,6 @@ const FormRegister = () => {
       username: formData.get("username"),
       password: formData.get("password"),
     };
-    console.log(data);
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
