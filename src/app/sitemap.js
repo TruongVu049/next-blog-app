@@ -27,6 +27,21 @@ export default async function sitemap() {
     }))
   );
 
+  const pages = [
+    {
+      url: `${baseUrl}/dang-nhap`,
+      lastModified: new Date().toISOString(),
+    },
+    {
+      url: `${baseUrl}/dang-ky`,
+      lastModified: new Date().toISOString(),
+    },
+    {
+      url: `${baseUrl}/tim-kiem`,
+      lastModified: new Date().toISOString(),
+    },
+  ];
+
   let fetchedRoutes = [];
 
   try {
@@ -37,5 +52,5 @@ export default async function sitemap() {
     throw JSON.stringify(error, null, 2);
   }
 
-  return [...routesMap, ...fetchedRoutes];
+  return [...routesMap, ...fetchedRoutes, ...pages];
 }
