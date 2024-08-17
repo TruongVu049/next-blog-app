@@ -14,38 +14,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model DanhMuc {
-  id      Int     @id @default(autoincrement())
-  tieude  String
-  hinhanh String?
-
-  BaiViet BaiViet[] @relation("DanhMucBaiViet")
+model Category {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+  slug        String  @unique
+  Post        Post[]  @relation("CategoryPost")
 }
 
-model BaiViet {
-  id         Int      @id @default(autoincrement())
-  ngaytao    DateTime @default(now())
-  tieude     String
-  noidung    String
-  hinhanh    String?
-  luotxem    Int      @default(0)
-  slug       String   @unique
-  id_danhmuc Int?
+model Post {
+  id          Int      @id @default(autoincrement())
+  updatedAt   DateTime @default(now())
+  title       String
+  content     String
+  image       String?
+  view        Int      @default(0)
+  like        Int      @default(0)
+  slug        String   @unique
+  id_category Int?
 
-  danhmuc  DanhMuc?   @relation("DanhMucBaiViet", fields: [id_danhmuc], references: [id])
-  BinhLuan BinhLuan[] @relation("BaiVietBinhLuan")
+  id_user String?
 
-  @@fulltext([noidung])
-  @@fulltext([noidung, tieude])
+  category Category? @relation("CategoryPost", fields: [id_category], references: [id])
+
+  user        User?         @relation("UserPost", fields: [id_user], references: [id])
+  PostComment PostComment[] @relation("PostPostComment")
+
+  @@fulltext([content])
+  @@fulltext([content, title])
 }
 
-model BinhLuan {
-  id         Int      @id @default(autoincrement())
-  ngaytao    DateTime @default(now())
-  noidung    String
-  id_baiviet Int
+model PostComment {
+  id        Int      @id @default(autoincrement())
+  createAt  DateTime @default(now())
+  name      String
+  image     String?
+  content   String
+  id_post   Int
+  id_parent Int?
 
-  baiviet BaiViet @relation("BaiVietBinhLuan", fields: [id_baiviet], references: [id])
+  post Post? @relation("PostPostComment", fields: [id_post], references: [id])
 }
 
 model User {
@@ -63,6 +71,8 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  Post Post[] @relation("UserPost")
 }
 
 model Account {
