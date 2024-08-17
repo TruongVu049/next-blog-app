@@ -2,11 +2,26 @@ import { unstable_cache } from "next/cache";
 import prisma from "./prisma";
 import { TAGS } from "../constants";
 
-export async function PrismaUnstableCache(query) {
+export async function PrismaUnstableCache(
+  query,
+  cache = "force-cache",
+  tags,
+  rld
+) {
   try {
-    const result = await unstable_cache(async () => {
-      return query();
-    })();
+    console.log(
+      "get database ========================================================"
+    );
+    const result = await unstable_cache(
+      async () => {
+        return query();
+      },
+      {
+        cache: cache,
+        tags: [...tags],
+        revalidate: rld,
+      }
+    )();
     return result;
   } catch (e) {
     const queryString = JSON.stringify(query);
@@ -35,7 +50,12 @@ export async function getCategoriesQuery() {
 }
 
 export async function getCategories() {
-  const getCachedCategories = await prisma.Category.findMany();
+  const getCachedCategories = await PrismaUnstableCache(
+    () => getCategoriesQuery(),
+    undefined,
+    [TAGS.categories],
+    320
+  );
   const categories = [...reshapeCategories(getCachedCategories)];
   return categories;
 }
@@ -46,7 +66,12 @@ export async function getPostsQuery(handle = {}) {
 }
 
 export async function getPosts() {
-  const getCachedPosts = await PrismaUnstableCache(() => getPostsQuery());
+  const getCachedPosts = await PrismaUnstableCache(
+    () => getPostsQuery(),
+    undefined,
+    [TAGS.posts],
+    60
+  );
   return getCachedPosts;
 }
 export async function getPostsView() {
