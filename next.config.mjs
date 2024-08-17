@@ -1,18 +1,35 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // images: {
+  //   remotePatterns: [
+  //     {
+  //       protocol: "https",
+  //       hostname: "",
+  //       port: "",
+  //       pathname: "**",
+  //     },
+  //     {
+  //       protocol: "https",
+  //       hostname: "avatars.githubusercontent.com",
+  //       port: "",
+  //       pathname: "**",
+  //     },
+
+  //   ],
+  // },
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "www.galaxycine.vn",
+        hostname: "avatars.githubusercontent.com",
         port: "",
-        pathname: "/media/**",
+        pathname: "/u/**",
       },
       {
         protocol: "https",
-        hostname: "firebasestorage.googleapis.com",
+        hostname: "**",
         port: "",
-        pathname: "/v0/b/next-blog-app-21b73.appspot.com/**",
+        pathname: "**",
       },
     ],
   },

@@ -8,19 +8,24 @@ export async function doSocialLogin(formData) {
 }
 
 export async function doLogout() {
-  await signOut({ redirectTo: "/" });
+  await signOut({ redirectTo: "/", redirect: true });
 }
 
 export async function doCredentialLogin(formData) {
   try {
+    for (let i = 0; i < 100000; i++) {}
     const res = await signIn("credentials", {
       username: formData.get("username"),
       password: formData.get("password"),
       redirect: false,
     });
     revalidatePath("/");
-    return res;
+    return {
+      message: "OK",
+    };
   } catch (err) {
-    throw err;
+    return {
+      message: err,
+    };
   }
 }
