@@ -1,12 +1,21 @@
 import { unstable_cache } from "next/cache";
 import prisma from "./prisma";
 import { TAGS } from "../constants";
+import {
+  getCategoriesQuery,
+  getPostsQuery,
+  getSimilarPostsQuery,
+  getRecentPostsQuery,
+  getCommentsQuery,
+  createCommentQuery,
+} from "./queries";
 
 export async function PrismaUnstableCache(
   query,
   cache = "force-cache",
   tags,
-  rld
+  rld,
+  key
 ) {
   try {
     console.log(
@@ -16,6 +25,7 @@ export async function PrismaUnstableCache(
       async () => {
         return query();
       },
+      [...key],
       {
         cache: cache,
         tags: [...tags],
@@ -45,24 +55,16 @@ const reshapeCategories = (categories) => {
   return reshapedCategories;
 };
 
-export async function getCategoriesQuery() {
-  return await prisma.Category.findMany();
-}
-
 export async function getCategories() {
   const getCachedCategories = await PrismaUnstableCache(
     () => getCategoriesQuery(),
     undefined,
     [TAGS.categories],
-    320
+    320,
+    ["category"]
   );
   const categories = [...reshapeCategories(getCachedCategories)];
   return categories;
-}
-
-export async function getPostsQuery(handle = {}) {
-  const posts = await prisma.Post.findMany(handle);
-  return posts;
 }
 
 export async function getPosts() {
@@ -70,46 +72,47 @@ export async function getPosts() {
     () => getPostsQuery(),
     undefined,
     [TAGS.posts],
-    60
+    60,
+    ["list-post"]
   );
   return getCachedPosts;
 }
-export async function getPostsView() {
-  const getCachedPosts = getPostsQuery({
-    include: {
-      user: true,
-      category: true,
-    },
-  });
-  return getCachedPosts;
+
+export async function getSimilarPosts() {
+  const getCacheSimilarPosts = await PrismaUnstableCache(
+    () => getSimilarPostsQuery(),
+    undefined,
+    [TAGS.similarPosts],
+    320,
+    ["similar-post"]
+  );
+  return getCacheSimilarPosts;
 }
 
-export async function getSimilarPosts(slug, categoryid) {
-  const posts = await prisma.Post.findMany({
-    where: {
-      id_category: parseInt(categoryid),
-      slug: {
-        not: slug,
-      },
-    },
-    include: {
-      category: true,
-      user: true,
-    },
-  });
-  return posts;
-}
 export async function getRecentPosts() {
-  const posts = await prisma.Post.findMany({
-    include: {
-      user: true,
-    },
-    orderBy: {
-      view: "desc",
-    },
-    take: 5,
-  });
-  return posts;
+  const getCacheReCentPosts = await PrismaUnstableCache(
+    () => getRecentPostsQuery(),
+    undefined,
+    [TAGS.recentPosts],
+    320,
+    ["recent-post"]
+  );
+  return getCacheReCentPosts;
+}
+
+export async function getComments(postid) {
+  const comments = await getCommentsQuery(postid);
+  return comments;
+}
+export async function createComment(comment) {
+  const createComment = await PrismaUnstableCache(
+    () => createCommentQuery(),
+    "no-store",
+    [TAGS.comment],
+    60,
+    undefined
+  );
+  return createComment;
 }
 
 // export async function getPosts(currentPage, limit, search) {
@@ -256,35 +259,6 @@ export async function updatePost(formData) {
       },
     });
     return post;
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
-}
-
-export async function getComments(postid) {
-  const comments = await prisma.PostComment.findMany({
-    where: {
-      id_post: postid,
-    },
-    orderBy: {
-      createAt: "desc",
-    },
-  });
-  return comments;
-}
-
-export async function createComment(comment) {
-  try {
-    const newComment = await prisma.PostComment.create({
-      data: {
-        name: comment.name,
-        image: comment.image,
-        content: comment.content,
-        id_post: parseInt(comment.id_post),
-      },
-    });
-    return newComment;
   } catch (err) {
     console.log(err);
     return null;

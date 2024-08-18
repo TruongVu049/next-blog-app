@@ -5,13 +5,13 @@
 // import { getToTalPagePosts } from "@/libs/prisma";
 import PostCard from "@/components/postCard";
 import PostWidget from "@/components/postWidget";
-import { getPostsView } from "@/libs/prisma";
+import { getPosts } from "@/libs/prisma";
 const limit = 10;
 
 export default async function Home({ searchParams }) {
   // const currentPage = parseInt(searchParams?.page) || 1;
   // const totalPages = await getToTalP agePosts("", limit);
-  const posts = await getPostsView();
+  const posts = await getPosts();
   return (
     <main className="max-w-screen-xl block mx-auto px-3 mt-4">
       <div className="flex md:flex-row flex-col gap-5 relative">
