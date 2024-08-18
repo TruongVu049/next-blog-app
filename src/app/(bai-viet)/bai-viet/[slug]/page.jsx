@@ -1,21 +1,34 @@
 import "react-quill/dist/quill.bubble.css";
 import "./style.css";
-import { getPostDetail, getPosts } from "@/libs/prisma";
+import { getPostDetail } from "@/libs/prisma";
 import Image from "next/image";
 import Comment from "@/components/comment";
 import { auth } from "@/utils/auth";
 import PostWidget from "@/components/postWidget";
 import { HeartIcon } from "@heroicons/react/24/solid";
-
 import { notFound } from "next/navigation";
 
+const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
+  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+  : "http://localhost:3000";
+
 export async function generateMetadata({ params }) {
-  const post = await getPosts(params.slug);
-  if (!post) return notFound();
-  const url = post.image;
+  const post = await getPostDetail(params.slug);
+  if (!post) {
+    return;
+  }
+  const authors = post?.user?.name || "default";
+  const date = new Date(Date.parse("2024-08-17T08:36:29.926Z"));
+  const publishedAt = date.toISOString();
+  const modifiedAt = date.toISOString();
+  const ogImages = [
+    {
+      url: post.image,
+    },
+  ];
   return {
     title: post.title,
-    description: post.description,
+    description: post.content,
     robots: {
       index: post.title,
       follow: post.title,
@@ -25,15 +38,27 @@ export async function generateMetadata({ params }) {
       },
     },
     openGraph: {
-      images: [
-        {
-          url,
-        },
-      ],
+      title: post.title,
+      description: post.content,
+      siteName: "vnblog Chia Sẻ Kiến Thức - Blog Đa Lĩnh Vực",
+      locale: "vi_VN",
+      type: "article",
+      publishedTime: publishedAt,
+      modifiedTime: modifiedAt,
+      url: "./",
+      images: ogImages,
+      authors: authors.length > 0 ? authors : ["Truong Vu"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.content,
+      images: [ogImages],
     },
   };
 }
-const PostDetail = async ({ params }) => {
+
+export default async function PostDetail({ params }) {
   const { slug } = params;
   const post = await getPostDetail(slug);
   if (!post) return notFound();
@@ -85,7 +110,7 @@ const PostDetail = async ({ params }) => {
             className="content view ql-editor"
             dangerouslySetInnerHTML={{ __html: post?.content }}
           />
-          <Comment postid={post.id} />
+          <Comment user={loggedInUser} postid={post.id} />
         </div>
         <div className="w-1 hidden md:block border-r border-neutral-200"></div>
         <div className="relative md:sticky top-2 left-0 right-0 flex-2 md:w-64 lg:w-72 h-fit flex flex-col gap-10">
@@ -94,6 +119,4 @@ const PostDetail = async ({ params }) => {
       </div>
     </main>
   );
-};
-
-export default PostDetail;
+}

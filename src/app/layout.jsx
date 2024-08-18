@@ -1,43 +1,58 @@
 import { Inter } from "next/font/google";
 import Navbar from "@/components/navbar";
-import { ensureStartsWith } from "./helper";
 import { Suspense } from "react";
 import "./globals.css";
-
 const inter = Inter({ subsets: ["latin"] });
-const { TWITTER_CREATOR, TWITTER_SITE, SITE_NAME } = process.env;
+
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
   ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
   : "http://localhost:3000";
-const twitterCreator = TWITTER_CREATOR
-  ? ensureStartsWith(TWITTER_CREATOR, "@")
-  : undefined;
-const twitterSite = TWITTER_SITE
-  ? ensureStartsWith(TWITTER_SITE, "https://")
-  : undefined;
 
 export const metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: SITE_NAME,
-    template: `%s | ${SITE_NAME}`,
+    default: "vnblog Chia Sẻ Kiến Thức - Blog Đa Lĩnh Vực",
+    template: `%s | vnblog Chia Sẻ Kiến Thức - Blog Đa Lĩnh Vực`,
+  },
+  description:
+    "Nơi bạn có thể tự do viết và chia sẻ bài viết về mọi chủ đề. Tham gia blog cộng đồng để tìm kiếm thông tin, đọc bài viết hữu ích, và kết nối với người đọc cùng đam mê.",
+  openGraph: {
+    title: "vnblog Chia Sẻ Kiến Thức - Blog Đa Lĩnh Vực",
+    description:
+      "Nơi bạn có thể tự do viết và chia sẻ bài viết về mọi chủ đề. Tham gia blog cộng đồng để tìm kiếm thông tin, đọc bài viết hữu ích, và kết nối với người đọc cùng đam mê.",
+    url: "./",
+    siteName: "vnblog Chia Sẻ Kiến Thức - Blog Đa Lĩnh Vực",
+    images: [`${baseUrl}/static/images/twitter-card.png`],
+    locale: "vi_VN",
+    type: "website",
+  },
+  alternates: {
+    canonical: "./",
+    types: {
+      "application/rss+xml": `${baseUrl}/feed.xml`,
+    },
   },
   robots: {
-    follow: true,
     index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
-  ...(twitterCreator &&
-    twitterSite && {
-      twitter: {
-        card: "summary_large_image",
-        creator: twitterCreator,
-        site: twitterSite,
-      },
-    }),
+  twitter: {
+    title: "vnblog Chia Sẻ Kiến Thức - Blog Đa Lĩnh Vực",
+    card: "summary_large_image",
+    images: [`${baseUrl}/static/images/twitter-card.png`],
+  },
 };
+
 export default async function RootLayout({ children }) {
   return (
-    <html lang="vi">
+    <html lang={"vi"} className="scroll-smooth" suppressHydrationWarning>
       <body className={inter.className}>
         <Navbar />
         <Suspense>{children}</Suspense>
