@@ -69,3 +69,42 @@ export async function createCommentQuery(comment) {
     return null;
   }
 }
+
+export async function getPostDetailQuery(slug) {
+  const post = await prisma.Post.update({
+    where: { slug },
+    data: { view: { increment: 1 } },
+    include: {
+      user: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+    },
+  });
+  return post;
+}
+
+export async function getPostsWithParamsQuery(skip, limit, search = null) {
+  const data = await prisma.Post.findMany({
+    skip: skip,
+    take: limit,
+    where: {
+      content: {
+        search: search,
+      },
+      title: {
+        search: search,
+      },
+    },
+    include: {
+      user: true,
+      category: true,
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
+  return data;
+}
