@@ -1,12 +1,12 @@
 import "react-quill/dist/quill.bubble.css";
 import "./style.css";
 import PostWidget from "@/components/post/postWidget";
-import { HeartIcon } from "@heroicons/react/24/solid";
+
 import Image from "next/image";
 import Comment from "@/components/comment";
 import { Suspense } from "react";
 import { auth } from "@/utils/auth";
-
+import Social from "@/components/social";
 const PostContent = async ({ post }) => {
   const session = await auth();
   const loggedInUser = session?.user;
@@ -16,7 +16,7 @@ const PostContent = async ({ post }) => {
         <h1 className="md:text-4xl text-2xl font-bold my-5 ml-3  ">
           {post.title}
         </h1>
-        <div className="overflow-hidden flex items-center gap-4 cursor-pointer mx-3">
+        <div className="overflow-hidden mx-3">
           <div className="w-full  flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Image
@@ -34,7 +34,11 @@ const PostContent = async ({ post }) => {
               </div>
             </div>
           </div>
-          <HeartIcon className="w-8 h-8 text-gray-700 hover:text-rose-500" />
+        </div>
+        <div className="mt-4 mb-2 px-3">
+          <Suspense fallback={null}>
+            <Social slug={post.slug} content={post.content} />
+          </Suspense>
         </div>
         <Suspense fallback={null}>
           <div
@@ -48,7 +52,9 @@ const PostContent = async ({ post }) => {
       </div>
       <div className="w-1 hidden md:block border-r border-neutral-200"></div>
       <div className="relative md:sticky top-2 left-0 right-0 flex-2 md:w-64 lg:w-72 h-fit flex flex-col gap-10">
-        <PostWidget slug={post.slug} categoryID={post.id_category} />
+        <Suspense fallback={null}>
+          <PostWidget slug={post.slug} categoryID={post.id_category} />
+        </Suspense>
       </div>
     </div>
   );
