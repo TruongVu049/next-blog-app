@@ -51,10 +51,27 @@ const PostContent = async ({ post }) => {
         </Suspense>
       </div>
       <div className="w-1 hidden md:block border-r border-neutral-200"></div>
-      <div className="relative md:sticky top-2 left-0 right-0 flex-2 md:w-64 lg:w-72 h-fit flex flex-col gap-10">
-        <Suspense fallback={null}>
-          <PostWidget slug={post.slug} categoryID={post.id_category} />
-        </Suspense>
+      <div className="relative   top-2 left-0 right-0 flex-2 md:w-64 lg:w-72 h-fit flex flex-col gap-10">
+        <div className="bg-[#f7f7f7] text-[#1d1e20] p-3">
+          <h2 className="mb-3 pb-3 text-sm font-semibold border-b border-[#d4d4d4] text-gray-700">
+            Các bài viết gần đây
+          </h2>
+          <div>
+            <Suspense
+              fallback={new Array(3).fill(null).map((item, index) => (
+                <div key={index} className="flex items-center gap-1 pb-2">
+                  <div className="rounded-full w-10 h-10 nimate-pulse bg-gray-200"></div>
+                  <div className="w-full">
+                    <div className="rounded w-full h-8 nimate-pulse bg-gray-200"></div>
+                    <div className="rounded mt-1 w-14 h-4 nimate-pulse bg-gray-200"></div>
+                  </div>
+                </div>
+              ))}
+            >
+              <PostWidget slug={post.slug} categoryID={post.id_category} />
+            </Suspense>
+          </div>
+        </div>
       </div>
     </div>
   );

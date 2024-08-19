@@ -1,4 +1,4 @@
-import PostCard from "@/components/post/postCard.jsx";
+import { PostCard } from "./postCard";
 const PostList = ({ posts }) => {
   return (
     <>

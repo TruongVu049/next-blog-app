@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 
-const PostCard = ({ post }) => {
+export const PostCard = ({ post }) => {
   return (
     <Link href={`/bai-viet/${post.slug}`}>
       <div className={`flex flex-col gap-2 rounded cursor-pointer h-full `}>
@@ -59,4 +59,26 @@ const PostCard = ({ post }) => {
   );
 };
 
-export default PostCard;
+export const PostCardSkeleton = () => {
+  return (
+    <div className={`flex flex-col gap-2 rounded cursor-pointer h-full  `}>
+      <div className="w-full sm:h-72 md:h-60 rounded nimate-pulse bg-gray-200"></div>
+      <div className="flex flex-col gap-2 justify-between ">
+        <div>
+          <div className="h-5 w-24 rounded nimate-pulse bg-gray-200"></div>
+          <div className="mt-1 h-5 w-full rounded nimate-pulse bg-gray-200"></div>
+        </div>
+        <div>
+          <div className="flex items-center gap-2">
+            <div className="h-[40px] w-[40px] rounded nimate-pulse bg-gray-200"></div>
+            <div>
+              <div className="h-5 w-full rounded nimate-pulse bg-gray-200"></div>
+              <div className="h-5 mt-1 w-28 rounded nimate-pulse bg-gray-200"></div>
+            </div>
+          </div>
+          <div className="mt-2 h-16 w-full rounded nimate-pulse bg-gray-200"></div>
+        </div>
+      </div>
+    </div>
+  );
+};

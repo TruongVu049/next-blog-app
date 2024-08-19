@@ -2,7 +2,7 @@ import { getPostsWithParams, getToTalPagePosts } from "@/libs/prisma";
 import PostList from "@/components/post/postList.jsx";
 import { Suspense } from "react";
 import Pagination from "@/components/pagination";
-
+import { PostCardSkeleton } from "@/components/post/postCard";
 export const metadata = {
   title: "Tìm kiếm",
   description: "Tìm kiếm bài viết",
@@ -22,11 +22,15 @@ const SearchPage = async ({ searchParams }) => {
         Kết quả cho <strong className="text-gray-950"> {search}</strong>
       </h2>
       <div className="flex-1 grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 lg:gap-y-8 lg:gap-4">
-        <Suspense fallback={null}>
+        <Suspense
+          fallback={new Array(4).fill(null).map((item, index) => (
+            <PostCardSkeleton key={`skeloton-${index}`} />
+          ))}
+        >
           <PostList posts={posts} />
         </Suspense>
       </div>
-      <div className="mb-5">
+      <div className="mb-5 mt-3">
         <Suspense fallback={null}>
           <Pagination totalPages={totalPages} currentPage={currentPage} />
         </Suspense>
