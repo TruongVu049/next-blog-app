@@ -1,7 +1,7 @@
 "use server";
 import { signIn, signOut } from "@/utils/auth";
 import { revalidatePath } from "next/cache";
-
+import { removePost } from "@/libs/prisma";
 export async function doSocialLogin(formData) {
   const action = formData.get("action");
   await signIn(action, { redirectTo: "/" });
@@ -27,5 +27,15 @@ export async function doCredentialLogin(formData) {
     return {
       message: err,
     };
+  }
+}
+
+export async function doRemovePost(formData) {
+  try {
+    const postid = formData.get("postid");
+    const post = await removePost(postid);
+    revalidatePath("/");
+  } catch (err) {
+    console.log(err);
   }
 }

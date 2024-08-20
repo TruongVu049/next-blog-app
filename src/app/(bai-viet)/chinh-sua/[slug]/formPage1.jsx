@@ -6,13 +6,13 @@ import Image from "next/image";
 import { uploadImg } from "@/libs/firebase/uploadImg";
 import { useRouter } from "next/navigation";
 
-const FormEditPost = ({ category, data }) => {
+const FormEditPost = ({ category, post }) => {
   const router = useRouter();
-  const [title, setTitle] = useState(data?.tieude ?? "");
-  const [value, setValue] = useState(data?.noidung ?? "");
-  const [categoryId, setCategoryId] = useState(data?.id_danhmuc);
+  const [title, setTitle] = useState(post?.title ?? "");
+  const [value, setValue] = useState(post?.content ?? "");
+  const [categoryId, setCategoryId] = useState(post?.id_category);
   const [file, setFile] = useState(null);
-  const [media, setMedia] = useState(data?.hinhanh ?? "");
+  const [media, setMedia] = useState(post?.image ?? "");
 
   const quill = useRef();
 
@@ -156,7 +156,7 @@ const FormEditPost = ({ category, data }) => {
         <input
           type="text"
           name="id"
-          value={data?.id ?? ""}
+          value={post?.id ?? ""}
           className="sr-only"
         />
         <div className="mb-3">
@@ -190,11 +190,11 @@ const FormEditPost = ({ category, data }) => {
               category.map((item, i) => {
                 return (
                   <option
-                    selected={item.id == data?.id_danhmuc ? true : false}
+                    selected={item.id == post?.id_category ? true : false}
                     key={item.id}
                     value={item.id}
                   >
-                    {item.tieude}
+                    {item.title}
                   </option>
                 );
               })}

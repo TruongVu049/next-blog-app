@@ -1,4 +1,4 @@
-import { displayDate } from "@/helpers/utils";
+import { displayDate, removeHTMLTags } from "@/helpers/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { CalendarIcon } from "@heroicons/react/24/solid";
@@ -19,10 +19,12 @@ export const PostCard = ({ post }) => {
         <div className="flex flex-col gap-2 justify-between h-full">
           <div>
             <div>
-              <p className="text-sm font-[500] text-[#7c7c7c]">
+              <p className="text-sm font-[500] text-[#7c7c7c] ">
                 {post.category.title}
               </p>
-              <h2 className="sm:text-xl font-semibold">{post.title}</h2>
+              <h2 className="sm:text-xl line-clamp-2 font-semibold">
+                {post.title}
+              </h2>
             </div>
           </div>
 
@@ -30,7 +32,11 @@ export const PostCard = ({ post }) => {
             <div className="flex items-center gap-2">
               <div>
                 <Image
-                  src={post.user.image}
+                  src={
+                    post?.user?.image
+                      ? post?.user?.image
+                      : "/static/img-user.png"
+                  }
                   width={40}
                   height={40}
                   alt={post.user.name}
@@ -49,8 +55,8 @@ export const PostCard = ({ post }) => {
                 </div>
               </div>
             </div>
-            <p className="text-xs sm:text-sm text-gray-700">
-              {post.content.substring(3, 100).concat(" ...")}
+            <p className="text-xs sm:text-sm text-gray-700 line-clamp-2">
+              {removeHTMLTags(post.content)}
             </p>
           </div>
         </div>

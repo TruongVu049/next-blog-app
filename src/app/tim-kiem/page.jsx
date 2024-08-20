@@ -8,7 +8,7 @@ export const metadata = {
   description: "Tìm kiếm bài viết",
 };
 
-const limit = 20;
+const limit = 9;
 
 const SearchPage = async ({ searchParams }) => {
   const search = searchParams?.q || "";
@@ -23,7 +23,7 @@ const SearchPage = async ({ searchParams }) => {
       </h2>
       <div className="flex-1 grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 lg:gap-y-8 lg:gap-4">
         <Suspense
-          fallback={new Array(4).fill(null).map((item, index) => (
+          fallback={new Array(3).fill(null).map((item, index) => (
             <PostCardSkeleton key={`skeloton-${index}`} />
           ))}
         >

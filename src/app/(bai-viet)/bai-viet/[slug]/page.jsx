@@ -2,7 +2,7 @@ import { getPostDetail } from "@/libs/prisma";
 import { notFound } from "next/navigation";
 import PostContent from "./postContent";
 import { Suspense } from "react";
-
+import { removeHTMLTags } from "@/helpers/utils";
 export async function generateMetadata({ params }) {
   const post = await getPostDetail(params.slug);
   if (!post) {
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }) {
   ];
   return {
     title: post.title,
-    description: post.content,
+    description: removeHTMLTags(post.content),
     robots: {
       index: post.title,
       follow: post.title,
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }) {
     },
     openGraph: {
       title: post.title,
-      description: post.content,
+      description: removeHTMLTags(post.content),
       siteName: "vnblog Chia Sẻ Kiến Thức - Blog Đa Lĩnh Vực",
       locale: "vi_VN",
       type: "article",
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }) {
     twitter: {
       card: "summary_large_image",
       title: post.title,
-      description: post.content,
+      description: removeHTMLTags(post.content),
       images: [ogImages],
     },
   };
@@ -63,7 +63,7 @@ export default async function PostDetail({ params }) {
   };
 
   return (
-    <main className="max-w-screen-xl block mx-auto px-3 mt-4 min-h-[1000px]">
+    <main className="max-w-screen-xl block mx-auto px-3 mt-4 ">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

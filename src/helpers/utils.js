@@ -23,6 +23,10 @@ export const displayDate = (timestamp) => {
   return `${day} ${monthNames[monthIndex]} , ${year}`;
 };
 
+export function removeHTMLTags(str) {
+  return str.replace(/<\/?[^>]+(>|$)/g, "");
+}
+
 // export const displayActionMessage = (msg, status = "info") => {
 //   const div = document.createElement("div");
 //   const span = document.createElement("span");

@@ -10,6 +10,12 @@ import {
   createCommentQuery,
   getPostDetailQuery,
   getPostsWithParamsQuery,
+  getPostByCategoryQuery,
+  getToTalPagePostsQuery,
+  getToTalPagePostsByCategoryQuery,
+  getTopViewedPostsQuery,
+  getPostOfUserQuery,
+  removePostQuery,
 } from "./queries";
 
 export async function PrismaUnstableCache(
@@ -80,13 +86,52 @@ export async function getPosts() {
   return getCachedPosts;
 }
 
-export async function getSimilarPosts() {
-  const getCacheSimilarPosts = await PrismaUnstableCache(
-    () => getSimilarPostsQuery(),
+export async function getTopViewedPosts() {
+  const now = new Date();
+  const sevenDaysAgo = new Date(now);
+  sevenDaysAgo.setDate(now.getDate() - 7);
+
+  const getCachedPosts = await PrismaUnstableCache(
+    () => getTopViewedPostsQuery(sevenDaysAgo, now),
     undefined,
-    [TAGS.similarPosts],
-    320,
-    ["similar-post"]
+    [TAGS.topposts],
+    60,
+    ["list-top-post"]
+  );
+  return getCachedPosts;
+}
+
+export async function getPostsByCategory(categorySlug, currentPage, limit) {
+  const skip = (currentPage - 1) * limit;
+  const getCachedPosts = await PrismaUnstableCache(
+    () =>
+      getPostByCategoryQuery(
+        categorySlug === "all" ? null : categorySlug,
+        skip,
+        limit
+      ),
+    "no-store",
+    [categorySlug, `'${currentPage}'`],
+    60,
+    [`list-post-category-${categorySlug}-${currentPage}`]
+  );
+  return getCachedPosts;
+}
+export async function getToTalPagePostsByCategory(categorySlug, limit) {
+  const totalPage = await getToTalPagePostsByCategoryQuery(
+    categorySlug === "all" ? null : categorySlug,
+    limit
+  );
+  return totalPage;
+}
+
+export async function getSimilarPosts(slug, categoryid) {
+  const getCacheSimilarPosts = await PrismaUnstableCache(
+    () => getSimilarPostsQuery(slug, categoryid),
+    "no-store",
+    [TAGS.similarPosts, `'${slug}'`, `'${categoryid}'`],
+    60,
+    [`similar-post-${slug}-${categoryid}`]
   );
   return getCacheSimilarPosts;
 }
@@ -108,11 +153,11 @@ export async function getComments(postid) {
 }
 export async function createComment(comment) {
   const createComment = await PrismaUnstableCache(
-    () => createCommentQuery(),
+    () => createCommentQuery(comment),
     "no-store",
     [TAGS.comment],
     60,
-    undefined
+    [`create-comment-${JSON.stringify(comment)}`]
   );
   return createComment;
 }
@@ -141,22 +186,8 @@ export async function getPostsWithParams(currentPage, limit, search) {
 }
 
 export async function getToTalPagePosts(search, limit) {
-  let data = null;
-  if (search !== "") {
-    data = await prisma.Post.count({
-      where: {
-        content: {
-          search: search,
-        },
-        title: {
-          search: search,
-        },
-      },
-    });
-  } else {
-    data = await prisma.Post.count();
-  }
-  return Math.ceil(data / limit);
+  const totalPage = await getToTalPagePostsQuery(search, limit);
+  return totalPage;
 }
 
 export async function getLatestPost() {
@@ -169,17 +200,8 @@ export async function getLatestPost() {
 }
 
 export async function getPostOfUser(userId) {
-  const post = await prisma.Post.findMany({
-    include: {
-      user: true,
-    },
-    where: {
-      user: {
-        id: userId,
-      },
-    },
-  });
-  return post;
+  const posts = await getPostOfUserQuery(userId);
+  return posts;
 }
 
 export async function register(formData) {
@@ -240,7 +262,7 @@ export async function updatePost(formData) {
         content: formData.content,
         image: formData.image,
         slug: formData.slug,
-        id_danhmuc: parseInt(formData.category),
+        id_category: parseInt(formData.category),
       },
     });
     return post;
@@ -248,4 +270,9 @@ export async function updatePost(formData) {
     console.log(err);
     return null;
   }
+}
+
+export async function removePost(postid) {
+  const deletePost = await removePostQuery(parseInt(postid));
+  return deletePost;
 }

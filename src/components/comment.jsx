@@ -45,14 +45,16 @@ const Comment = ({ postid, user }) => {
       method: "POST",
       body: JSON.stringify({
         name: user.name,
-        image: user.image,
+        image: user?.image ? user?.image : "/static/img-user.png",
         content: formData.get("comment"),
         id_post: postid,
       }),
     })
       .then((res) => {
+        console.log(res);
         if (res.status === 200) {
           handleGetComments();
+          e.reset();
         }
       })
       .catch((err) => {
@@ -60,9 +62,8 @@ const Comment = ({ postid, user }) => {
       })
       .finally(() => {});
   }
-  console.log("comments", comments);
   return (
-    <section className="px-4 py-4 lg:py-8 bg-white antialiased">
+    <section className="md:px-4 px-0 py-4 lg:py-8 bg-white antialiased">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg lg:text-2xl font-bold text-gray-900 ">
           Bình luận
@@ -88,14 +89,14 @@ const Comment = ({ postid, user }) => {
             type=""
             className="hover:bg-blue-700 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-600 rounded-lg focus:ring-4 focus:ring-primary-200  hover:bg-primary-800"
           >
-            Gửi đánh giá
+            Gửi bình luận
           </button>
         ) : (
           <Link
             href={LOGIN}
             className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-600 rounded-lg focus:ring-4 focus:ring-primary-200  hover:bg-primary-800"
           >
-            Gửi đánh giá
+            Gửi bình luận
           </Link>
         )}
       </form>

@@ -26,7 +26,6 @@ const FormWriteBlog = ({ userId, category }) => {
       slug: slugify(formData.get("title")),
       userId: userId,
     };
-    console.log(data);
     try {
       const res = await fetch("/api/posts", {
         method: "POST",

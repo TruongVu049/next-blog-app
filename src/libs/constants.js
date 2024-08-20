@@ -4,4 +4,5 @@ export const TAGS = {
   similarPosts: "similarposts",
   recentPosts: "recentposts",
   comment: "comment",
+  topposts: "toppost",
 };

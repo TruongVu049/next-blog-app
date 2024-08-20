@@ -3,14 +3,38 @@ import prisma from "./prisma";
 export async function getCategoriesQuery() {
   return await prisma.Category.findMany();
 }
+
 export async function getPostsQuery() {
   const posts = prisma.Post.findMany({
     include: {
       user: true,
       category: true,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
   return posts;
+}
+
+export async function getTopViewedPostsQuery(sevenDaysAgo, now) {
+  const topViewedPosts = await prisma.Post.findMany({
+    where: {
+      updatedAt: {
+        gte: sevenDaysAgo,
+        lte: now,
+      },
+    },
+    include: {
+      user: true,
+      category: true,
+    },
+    orderBy: {
+      view: "desc",
+    },
+    take: 9,
+  });
+  return topViewedPosts;
 }
 
 export async function getSimilarPostsQuery(slug, categoryid) {
@@ -34,7 +58,7 @@ export async function getRecentPostsQuery() {
       user: true,
     },
     orderBy: {
-      view: "desc",
+      updatedAt: "desc",
     },
     take: 5,
   });
@@ -107,4 +131,103 @@ export async function getPostsWithParamsQuery(skip, limit, search = null) {
     },
   });
   return data;
+}
+
+export async function getPostByCategoryQuery(categorySlug, skip, limit) {
+  const posts = await prisma.Post.findMany(
+    categorySlug
+      ? {
+          skip: skip,
+          take: limit,
+          where: {
+            category: {
+              slug: categorySlug,
+            },
+          },
+          include: {
+            category: true,
+            user: true,
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        }
+      : {
+          skip: skip,
+          take: limit,
+          include: {
+            category: true,
+            user: true,
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        }
+  );
+  return posts;
+}
+
+export async function getToTalPagePostsQuery(search, limit) {
+  let data = null;
+  if (search !== "") {
+    data = await prisma.Post.count({
+      where: {
+        content: {
+          search: search,
+        },
+        title: {
+          search: search,
+        },
+      },
+    });
+  } else {
+    data = await prisma.Post.count();
+  }
+  return Math.ceil(data / limit);
+}
+export async function getToTalPagePostsByCategoryQuery(categorySlug, limit) {
+  const data = await prisma.Post.count(
+    categorySlug
+      ? {
+          where: {
+            category: {
+              slug: categorySlug,
+            },
+          },
+        }
+      : undefined
+  );
+  return Math.ceil(data / limit);
+}
+
+export async function getPostOfUserQuery(userId) {
+  const post = await prisma.Post.findMany({
+    where: {
+      user: {
+        id: userId,
+      },
+    },
+    include: {
+      user: true,
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
+  return post;
+}
+export async function removePostQuery(postid) {
+  const deletePost = await prisma.$transaction(async (prisma) => {
+    await prisma.PostComment.deleteMany({
+      where: {
+        id_post: parseInt(postid),
+      },
+    });
+    await prisma.Post.delete({
+      where: {
+        id: postid,
+      },
+    });
+  });
+  return deletePost;
 }

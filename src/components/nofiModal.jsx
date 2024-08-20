@@ -16,7 +16,7 @@ const NofiModal = ({ onClose, title, children }) => {
               onClose();
             }}
           >
-            <XMarkIcon className="w-5 h-5 text-gray-950" />
+            <XMarkIcon className="w-6 h-6 text-gray-950" />
           </button>
           <div className="p-4 md:p-5 text-center ">
             <div className="mt-3">{children}</div>

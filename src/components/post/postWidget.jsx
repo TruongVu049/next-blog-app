@@ -31,18 +31,14 @@ const PostWidget = ({ categoryID, slug }) => {
           className="flex items-center gap-1 border-b border-[#d4d4d4] pb-2"
         >
           <Image
-            src={post.user.image}
-            width={50}
-            height={50}
+            src={post.image}
+            width={100}
+            height={100}
             alt={post.title}
-            className="rounded-full object-cover object-top w-10 h-10 aspect-auto mr-1"
+            className="object-cover object-top w-1/3 aspect-auto mr-1"
           />
-          <li className="hover:text-indigo-500">
-            <p className="text-sm">
-              {post.title.length > 25
-                ? post.title.slice(0, 35).concat(" ...")
-                : post.title}
-            </p>
+          <li className="hover:text-indigo-500 w-2/3">
+            <p className="text-sm text-justify line-clamp-2">{post.title}</p>
             <p className="text-xs">{displayDate(post.updatedAt)}</p>
           </li>
         </Link>

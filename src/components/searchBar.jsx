@@ -1,7 +1,14 @@
 "use client";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createUrl } from "@/app/helper";
+
+const createUrl = (pathname, params) => {
+  const paramsString = params.toString();
+  const queryString = `${paramsString.length ? "?" : ""}${paramsString}`;
+
+  return `${pathname}${queryString}`;
+};
+
 const SearchBar = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
