@@ -70,7 +70,9 @@ export default async function RootLayout({ children }) {
           speed={200}
           shadow="0 0 10px #2299DD,0 0 5px #2299DD"
         />
-        <Suspense>{children}</Suspense>
+        <div className="min-h-[100vh]">
+          <Suspense>{children}</Suspense>
+        </div>
         <div id="root-modal"></div>
         <Suspense>
           <Footer />
