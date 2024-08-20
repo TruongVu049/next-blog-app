@@ -23,9 +23,30 @@ module.exports = {
             transform: "translateY(0)",
           },
         },
+        fadeInLeft: {
+          "0%": {
+            transform: "translateX(100px)",
+          },
+          "100%": {
+            transform: "translateX(0)",
+          },
+        },
+        bouncex: {
+          "0%": {
+            transform: "translateX(-25%)",
+          },
+          "50%": {
+            transform: "translateX(0)",
+          },
+          "100%": {
+            transform: "translateX(-25%)",
+          },
+        },
       },
       animation: {
         fadeInDown: "fadeInDown 0.3s ease-in-out",
+        fadeInLeft: "fadeInLeft 0.3s ease-in-out",
+        bouncex: "bouncex 1s infinite",
       },
     },
   },

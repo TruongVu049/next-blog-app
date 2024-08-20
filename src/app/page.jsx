@@ -1,25 +1,35 @@
 import { Suspense } from "react";
-import { getPosts } from "@/libs/prisma";
+import { getTopViewedPosts } from "@/libs/prisma";
 import PostWidget from "@/components/post/postWidget";
 import PostList from "@/components/post/postList";
 import { PostCardSkeleton } from "@/components/post/postCard";
-const limit = 10;
+import { ArrowLongRightIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
 
 export default async function Home({ searchParams }) {
-  // const currentPage = parseInt(searchParams?.page) || 1;
-  // const totalPages = await getToTalP agePosts("", limit);
-  const posts = await getPosts();
+  const posts = await getTopViewedPosts();
   return (
     <main className="max-w-screen-xl block mx-auto px-3 mt-4">
       <div className="flex md:flex-row flex-col gap-5 relative">
-        <div className="flex-1 grid lg:grid-cols-2 grid-cols-1 gap-8 lg:gap-y-8 lg:gap-4">
-          <Suspense
-            fallback={new Array(4).fill(null).map((item, index) => (
-              <PostCardSkeleton key={`skeloton-${index}`} />
-            ))}
-          >
-            <PostList posts={posts} />
-          </Suspense>
+        <div className="flex-1">
+          <div className="flex-1 grid lg:grid-cols-2 grid-cols-1 gap-8 lg:gap-y-8 lg:gap-4">
+            <Suspense
+              fallback={new Array(4).fill(null).map((item, index) => (
+                <PostCardSkeleton key={`skeloton-${index}`} />
+              ))}
+            >
+              <PostList posts={posts} />
+            </Suspense>
+          </div>
+          <div className="flex justify-center mt-5 mb-10">
+            <Link
+              href={"/tim-kiem/all"}
+              className="flex items-center gap-2 hover:opacity-70 bg-gradient-to-r from-blue-600 to-violet-600 rounded-full px-4 py-2 text-white"
+            >
+              Xem thêm{" "}
+              <ArrowLongRightIcon className="inline-block animate-bouncex ease-in-out  w-6 h-6 text-white" />
+            </Link>
+          </div>
         </div>
         <div className="w-1 hidden md:block border-r border-neutral-200"></div>
         <div className="relative top-2 left-0 right-0 flex-2 md:w-64 lg:w-72 h-fit flex flex-col gap-10">

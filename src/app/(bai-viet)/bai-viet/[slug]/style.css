@@ -36,3 +36,15 @@
 .content p {
     text-align: justify;
 }
+
+@media only screen and (max-width: 1024px) {
+    .ql-editor {
+        padding: 12px 12px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .ql-editor {
+        padding: 12px 0;
+    }
+}
