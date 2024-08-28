@@ -1,7 +1,7 @@
-"use client";
 import Link from "next/link";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-const MobileNav = ({ links, openNav, handleOpenNav }) => {
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
+const MobileNav = ({ user, links, openNav, handleOpenNav, children }) => {
   return (
     <>
       <div
@@ -35,6 +35,39 @@ const MobileNav = ({ links, openNav, handleOpenNav }) => {
                   </li>
                 ))
               : null}
+            {user ? (
+              <>
+                <li>
+                  <Link
+                    href={"/ho-so"}
+                    className="flex items-center gap-3 hover:text-violet-600 border-b border-gray-200  py-2 px-3 text-gray-900  hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+                  >
+                    <InformationCircleIcon className="w-5 h-5 text-gray-700" />
+                    Thông tin
+                  </Link>
+                </li>
+                <li>{children}</li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link
+                    href={"/dang-ky"}
+                    className="border-b border-gray-200 block py-2 px-3 text-gray-900  hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+                  >
+                    Đăng ký
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={"/dang-nhap"}
+                    className="border-b border-gray-200 block py-2 px-3 text-gray-900  hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+                  >
+                    Đăng nhập
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

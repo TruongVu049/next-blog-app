@@ -9,7 +9,11 @@ const Navbar = async () => {
   const categories = await getCategories();
   return (
     <nav className="bg-white border-gray-200 border-b py-2">
-      <LinkList categories={categories} loggedInUser={loggedInUser}>
+      <LinkList
+        user={loggedInUser}
+        categories={categories}
+        loggedInUser={loggedInUser}
+      >
         <FormLogout />
       </LinkList>
     </nav>

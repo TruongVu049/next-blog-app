@@ -10,8 +10,9 @@ import {
 } from "@heroicons/react/24/solid";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-
-const LinkList = ({ categories, loggedInUser, children }) => {
+import SearchMobile from "../searchMobile";
+import FormLogout from "../formLogout";
+const LinkList = ({ user, categories, loggedInUser, children }) => {
   const [scroll, setScroll] = useState(false);
   const [openNav, setOpenNav] = useState(false);
   const pathname = usePathname();
@@ -19,6 +20,12 @@ const LinkList = ({ categories, loggedInUser, children }) => {
   const handleScroll = () => {
     setScroll(window.scrollY > 150);
   };
+
+  useEffect(() => {
+    if (usePathname && openNav) {
+      setOpenNav(false);
+    }
+  }, [pathname]);
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -73,6 +80,7 @@ const LinkList = ({ categories, loggedInUser, children }) => {
                   : null}
               </ul>
             </div>
+            <SearchMobile />
             {loggedInUser ? (
               <div className="flex items-center gap-6 ml-6">
                 <Link
@@ -107,7 +115,6 @@ const LinkList = ({ categories, loggedInUser, children }) => {
                 Đăng Nhập
               </Link>
             )}
-            <MobileNav links={categories} />
             <button
               type="button"
               onClick={() => setOpenNav(true)}
@@ -119,10 +126,13 @@ const LinkList = ({ categories, loggedInUser, children }) => {
         </div>
       </div>
       <MobileNav
+        user={user}
         links={categories}
         openNav={openNav}
         handleOpenNav={setOpenNav}
-      />
+      >
+        <FormLogout />
+      </MobileNav>
     </>
   );
 };

@@ -20,10 +20,10 @@ export async function getPostsQuery() {
 export async function getTopViewedPostsQuery(sevenDaysAgo, now) {
   const topViewedPosts = await prisma.Post.findMany({
     where: {
-      updatedAt: {
-        gte: sevenDaysAgo,
-        lte: now,
-      },
+      // updatedAt: {
+      //   gte: sevenDaysAgo,
+      //   lte: now,
+      // },
     },
     include: {
       user: true,
