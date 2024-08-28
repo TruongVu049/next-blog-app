@@ -27,6 +27,13 @@ export function removeHTMLTags(str) {
   return str.replace(/<\/?[^>]+(>|$)/g, "");
 }
 
+export const createUrl = (pathname, params) => {
+  const paramsString = params.toString();
+  const queryString = `${paramsString.length ? "?" : ""}${paramsString}`;
+
+  return `${pathname}${queryString}`;
+};
+
 // export const displayActionMessage = (msg, status = "info") => {
 //   const div = document.createElement("div");
 //   const span = document.createElement("span");

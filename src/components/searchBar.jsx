@@ -1,14 +1,7 @@
 "use client";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useRouter, useSearchParams } from "next/navigation";
-
-const createUrl = (pathname, params) => {
-  const paramsString = params.toString();
-  const queryString = `${paramsString.length ? "?" : ""}${paramsString}`;
-
-  return `${pathname}${queryString}`;
-};
-
+import { createUrl } from "@/helpers/utils";
 const SearchBar = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -29,7 +22,10 @@ const SearchBar = () => {
   }
 
   return (
-    <form onSubmit={onSubmit} className="max-w-md mx-auto lg:block hidden">
+    <form
+      onSubmit={onSubmit}
+      className="md:max-w-[120px] lg:max-w-md mx-auto md:block hidden"
+    >
       <label
         htmlFor="search"
         className="mb-2 text-sm font-medium text-gray-900 sr-only "
